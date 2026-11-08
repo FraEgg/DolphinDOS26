@@ -13,7 +13,7 @@
 | JiffyDOS manual (JiffyDOS 6.01, new edition) | [PDF](manuals/en/JiffyDOS_Manual.pdf)       | [PDF](manuals/de/JiffyDOS_Handbuch.pdf)       |
 | Technical notes                              | [docs/en](docs/en)                          | [docs/de](docs/de)                            |
 
-> **Status:** Developed and tested in the VICE emulator. The C64 kernal, also as C64 II ROM, the DolphinDos26 and DolphinDos26DD2 firmware for the 1541 Multi-Speeder and MS-FASTCOPY512 run on real hardware. Confirmation for DolphinDos26UL (C64 Ultimate, 1541) is still outstanding. Reports from real hardware are very welcome.
+> **Status:** The C64 kernal, also as C64 II ROM, the DolphinDos26 and DolphinDos26DD2 firmware for the 1541 Multi-Speeder and MS-FASTCOPY512 run on real hardware. Confirmation for DolphinDos26UL (C64 Ultimate, 1541) is still outstanding. Reports from real hardware are very welcome.
 
 ---
 
@@ -341,5 +341,3 @@ Nutzungsbedingungen: [LICENSE.md](LICENSE.md). JiffyDOS wird heute über Jim Bra
 - Entwickler: Frank Eggen, <frankeggen@emden.net>
 - Projekte: <https://github.com/fraegg>
 - Freiwillige Spende: [PayPal](https://www.paypal.com/donate/?cmd=_s-xclick&hosted_button_id=Q8HXKYARXKT4L&ssrt=1714757590172)
-
-
