@@ -63,6 +63,7 @@ Routinen: `ui_init`, `ui_exit`, `ui_puts` (Text bei `ui_row`/`ui_col` in
 | `tests/test_fastcopy.py [on/off] [40] [side2]` | MS-FASTCOPY512: lesen und zwei Kopien, Ziel-D64 byte-gleich zur Quelle |
 | `tests/test_fastcopy_reu.py [fall]` | MS-FASTCOPY512 mit REU: VIA1/PIA-Erkennung, Kopien byte-gleich, 40 Spuren, Formatieren, Schreibschutz, ohne REU/Parallel |
 | `tests/test_fastcopy_d64.py [fall]` | MS-FASTCOPY512: IMPORT/EXPORT D64 FILE mit MS-RAM und REU, 35/40 Spuren, Datei = Diskette, ungültige Dateien |
+| `tests/test_fastcopy_fast.py [fall]` | MS-FASTCOPY512 `TRANSFER: FAST`: VIA1, PIA, DD2, 40 Spuren, unformatiert, Schreibschutz |
 | `tests/test_fastcopy_led.py` | MS-FASTCOPY512: rote LED beim Lesen/Schreiben, DIRECTORY mit Blättern, fehlendes Laufwerk |
 | `tests/test_nibcopy.py` | MS-NIBCOPY512: Lesen/Schreiben über MS-RAM und REU, Ziel bitweise = Quelle, TRACK INFO, Presets (20 Prüfungen) |
 | `tests/test_rs232.py` | MS-RS232: LIST-Kopf, Installieren, Senden/Empfangen über die RS-232-Emulation von VICE (TCP-Testserver), Floppyzugriff bei offener RS-232-Datei, Aushängen, Wiedereinhängen (8 Prüfungen) |
@@ -127,6 +128,10 @@ bei Übertragungsfehlern bis zu dreimal wiederholt).
 
 ### MS-FASTCOPY512
 
+> **Achtung:** Mit Speicher `MS-RAM` überschreibt das Tool beim Lesen und beim D64-Import
+> den Inhalt des gewählten Slots, also die CDR-Seite und eine dort liegende RAM-Disk.
+> Wichtige Daten vorher mit `@CDW1` bzw. `@CDW2` auf Diskette sichern.
+
 Mindestanforderungen an die Hardware: C64 oder C128 im C64-Modus; für den Speicher MS-RAM
 eine 1541 mit Switchless Multi-Speeder V3 und DolphinDos26 oder DolphinDos26DD2 (MS-Addon-API);
 für den Speicher REU ein aktives Parallelkabel, ein DolphinDOS-Kernal (empfohlen
@@ -155,6 +160,13 @@ Einstellung bzw. springt von rechts nach links.
     benutzt die REU von unten: Bei einer kleinen REU können sich die Daten beider
     Tools überschreiben, das Tool erkennt das nicht in jedem Fall
   - `TRACKS: 35/40/AUTO` – AUTO prüft Spur 36 wie `CDR`
+  - `TRANSFER: FAST/DOS` – gilt für `STORAGE: REU` und für `COPY DISK` mit `STORAGE: MS-RAM`
+    (Roh-Weg, siehe unten). Bei der REU ist `FAST` (Voreinstellung) ein eigener
+    Laufwerkscode (`src/drv-fast.s`, je eine Fassung für VIA1 und PIA): rohes GCR im Takt der
+    Diskette über das Kabel, gemeldet durch Flanken der CLK-Leitung; die Spur wird am C64
+    gewandelt und geprüft, beim Schreiben komplett neu erzeugt (Spur vorab gelöscht).
+    Bildschirm während der Sitzung aus. In VICE etwa 30 s Lesen, 44 s Schreiben mit Verify
+    für 35 Spuren. `DOS` ist der langsamere Weg über `U1`/`U2`
   - `VERIFY: ON/OFF` – XV nur für das Schreiben
   - `DRIVE: 8-11` – voreingestellt ist das Laufwerk, von dem das Programm
     geladen wurde; beim Wechsel wird die API auf dem neuen Laufwerk geprüft
@@ -186,7 +198,46 @@ Einstellung bzw. springt von rechts nach links.
   schwarz revers Fehler; darunter Tätigkeit, Meldung des Laufwerks und die
   Spuranzahl der beiden RAM-Slots
 
+**Roh-Weg ins MS-RAM (`COPY DISK`, `STORAGE: MS-RAM`, `TRANSFER: FAST`):** Eigener Laufwerkscode
+(`src/drv-fast.s` mit `-D RAW`, ein Teil bei `$0300`, der Rest bei `$7000` in Bank 0) liest die
+Spuren roh als GCR direkt in die Bänke (Slot 1: Bank 1-31, Slot 2: Bank 32-62, Kennung in Bank 63,
+25 Sektoren je Bank) und schreibt sie von dort zurück, mit eigener Prüfung (vier Paritäten) und
+Verify im Laufwerk. In VICE etwa 18 s Lesen, 30 s Schreiben mit Verify für 35 Spuren.
+
+> **Achtung:** Nach `COPY DISK` mit dem Roh-Weg steht der Slot **roh** im RAM und wird nicht
+> zurückgewandelt. `@CDW1`/`@CDW2` und die RAM-Disk `@CDM` würden daraus Unsinn machen. Im Tool wird
+> ein Roh-Slot erkannt: `WRITE DISK` schreibt ihn richtig, `EXPORT D64 FILE` lehnt ihn ab
+> (`RAW COPY IN SLOT`), `READ DISK` und `IMPORT D64 FILE` machen den Slot wieder normal.
+
+### MS-15SECCOPY
+
+Eine neue Fassung von **15 Seconds Copy**, das **Mike Pall** 1986 geschrieben hat.
+Danke an Mike Pall für seine Pionierarbeit! Kopiert normal formatierte Disketten als rohes GCR über
+das Parallelkabel, mit Spur- und Sektorraster und Oberfläche nach MS-FASTCOPY512. Liegt auf
+`ms-tools.d64` und zusätzlich auf der eigenen Diskette `ms-15seccopy.d64`, Quelltext in `15SecCopy/neu/`.
+
+Mindestanforderungen:
+
+| Komponente | Mindestanforderung |
+|---|---|
+| C64 | C64 oder C128 im C64-Modus, auch C64U |
+| REU (zwingend) | mindestens 256 KB für 35 Spuren, 512 KB für 40 Spuren |
+| Parallelkabel (zwingend) | am VIA1 der 1541 (SpeedDOS-Kabel) oder am PIA (DolphinDOS 3, Multi-Speeder); liegt bei `$5000` kein PIA (z. B. unter DolphinDOS 2.0 auf dem Multi-Speeder), ist `PIA` gesperrt (`NO PIA AT $5000 IN THIS DRIVE ROM`); ob ein Kabel steckt, prüft das Programm nicht |
+| Laufwerk | 1541 als Gerät 8; das Original-ROM genügt, DolphinDos26, Multi-Speeder und RAM-Erweiterung sind nicht nötig |
+| C64-Kernal | der Original-Kernal genügt |
+
+Auf echter Hardware (C64U, 1541, REU) liefen `BACKUP` und `VERIFY` über alle 683 Blöcke ohne Fehler,
+am VIA1 unter DolphinDOS 2.0 und am PIA unter DolphinDos26DD2; 35 Spuren brauchten höchstens 12 s
+zum Lesen und 18 s zum Schreiben. Quelle und Ziel waren dabei dieselbe Diskette.
+
+> **Achtung:** Das Programm benutzt die REU als Zwischenspeicher. Dort abgelegte Daten, auch Slots
+> von MS-FASTCOPY512 und MS-NIBCOPY512, können überschrieben werden.
+
 ### MS-NIBCOPY512 (BETA)
+
+> **Achtung:** Mit Ablage `MS-RAM` überschreibt das Tool beim Lesen und beim G64-Import
+> fast das gesamte RAM des Multi-Speeders (Bank 1-63), also beide CDR-Seiten und eine
+> RAM-Disk. Wichtige Daten vorher mit `@CDW1` und `@CDW2` auf Diskette sichern.
 
 **BETA:** MS-NIBCOPY512 befindet sich im BETA-Stadium und wird weiterentwickelt. Funktionen und
 Bedienung können sich noch ändern; auf echter Hardware ist es erst teilweise getestet. Die
@@ -194,7 +245,6 @@ Oberfläche zeigt `MS-NIBCOPY512 BETA`.
 
 Auf echter Hardware (C64U mit einer 1541, Multi-Speeder V3 mit DolphinDos26DD2 am VIA1) liest und
 schreibt es normale Disketten mit MS-RAM und REU (35 Spuren, Verify an, Dateien danach byte-gleich).
-Disketten mit Kopierschutz sind dort noch nicht getestet.
 
 Mindestanforderungen an die Hardware: C64 oder C128 im C64-Modus; 1541 mit Switchless
 Multi-Speeder V3 und DolphinDos26 oder DolphinDos26DD2, oder DolphinDos26UL (C64U bzw.

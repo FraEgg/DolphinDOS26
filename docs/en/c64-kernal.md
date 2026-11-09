@@ -104,8 +104,8 @@ Modeled on the JiffyDOS sd2iec kernal (on the former monitor keys):
 | Key | Text | Effect |
 |---|---|---|
 | C=F3 | `@CD←` + RETURN | SD2IEC: one directory or disk image back |
-| C=F5 | ` "CD/:` + RETURN | on a directory line: change to this directory/image |
-| C=F7 | `LOAD` + Tab + `,8,1` | on a directory line: load this file (press RETURN yourself) |
+| C=F5 | `  "CD:` + RETURN | on a directory line: change to this directory/image |
+| C=F7 | `LOAD` + Tab + `:` | on a directory line: load this file (press RETURN yourself); without a device number, the device set with `@9` applies, otherwise device 8 |
 
 Before each F key text, `dd_fkey_init` ($F750) checks whether the cursor line is a
 directory line with quotation marks in column 6 (5-digit
@@ -310,7 +310,7 @@ for the build; the sources in `src/` are authoritative.
 
 ## Notes
 
-- Tested in the VICE emulator (GUI): with DolphinDos26 (Multi-Speeder, parallel),
+- Tested with DolphinDos26 (Multi-Speeder, parallel),
   DolphinDos26UL (C64U setup), JiffyDOS 1541 and standard 1541 – LOAD, SAVE,
   VERIFY (also `,8,1`, `,8,2`, `$`), status (ST), IRQ/keyboard, boot screen
   PAL/NTSC. The kernal also runs on real hardware (confirmed by the developer).

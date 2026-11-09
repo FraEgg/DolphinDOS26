@@ -63,6 +63,7 @@ Routines: `ui_init`, `ui_exit`, `ui_puts` (text at `ui_row`/`ui_col` in
 | `tests/test_fastcopy.py [on/off] [40] [side2]` | MS-FASTCOPY512: read and two copies, target D64 byte-identical to the source |
 | `tests/test_fastcopy_reu.py [case]` | MS-FASTCOPY512 with REU: VIA1/PIA detection, copies byte-identical, 40 tracks, formatting, write protection, without REU/parallel |
 | `tests/test_fastcopy_d64.py [case]` | MS-FASTCOPY512: IMPORT/EXPORT D64 FILE with MS-RAM and REU, 35/40 tracks, file = disk, invalid files |
+| `tests/test_fastcopy_fast.py [case]` | MS-FASTCOPY512 `TRANSFER: FAST`: VIA1, PIA, DD2, 40 tracks, unformatted, write protection |
 | `tests/test_fastcopy_led.py` | MS-FASTCOPY512: red LED while reading/writing, DIRECTORY with paging, missing drive |
 | `tests/test_nibcopy.py` | MS-NIBCOPY512: read/write via MS-RAM and REU, target bit-identical to source, TRACK INFO, presets (20 checks) |
 | `tests/test_rs232.py` | MS-RS232: LIST header, install, send/receive via VICE's RS-232 emulation (TCP test server), floppy access with an open RS-232 file, unhook, rehook (8 checks) |
@@ -127,6 +128,10 @@ retried up to three times on transfer errors).
 
 ### MS-FASTCOPY512
 
+> **Warning:** With `MS-RAM` storage, the tool overwrites the contents of the selected
+> slot when reading and on D64 import, that is the CDR side and any RAM disk stored there.
+> Save important data to disk first with `@CDW1` or `@CDW2`.
+
 Minimum hardware requirements: C64 or C128 in C64 mode; for MS-RAM storage a 1541 with
 Switchless Multi-Speeder V3 and DolphinDos26 or DolphinDos26DD2 (MS-Addon API); for REU storage
 an active parallel cable, a DolphinDOS kernal (`C64DolphinDos26.bin` recommended) and an REU of
@@ -155,6 +160,13 @@ jumps from right to left.
     uses the REU from the bottom: with a small REU the data of the two tools can
     overwrite each other, which the tool does not always detect
   - `TRACKS: 35/40/AUTO` – AUTO checks track 36 like `CDR`
+  - `TRANSFER: FAST/DOS` – applies to `STORAGE: REU` and to `COPY DISK` with `STORAGE: MS-RAM`
+    (raw path, see below). With the REU, `FAST` (the default) is a separate drive
+    code (`src/drv-fast.s`, one variant each for VIA1 and PIA): raw GCR at the pace of the
+    disk over the cable, signalled by edges of the CLK line; the track is converted and
+    checked on the C64, and generated completely anew when writing (track erased first).
+    Screen off during the session. In VICE about 30 s reading, 44 s writing with verify
+    for 35 tracks. `DOS` is the slower path via `U1`/`U2`
   - `VERIFY: ON/OFF` – XV for writing only
   - `DRIVE: 8-11` – preset to the drive the program was
     loaded from; on a change, the API is checked on the new drive
@@ -185,7 +197,47 @@ jumps from right to left.
   black reverse error; below it, the activity, the drive's message and the
   track count of the two RAM slots
 
+**Raw path into the MS-RAM (`COPY DISK`, `STORAGE: MS-RAM`, `TRANSFER: FAST`):** Separate drive
+code (`src/drv-fast.s` with `-D RAW`, one part at `$0300`, the rest at `$7000` in bank 0) reads
+the tracks as raw GCR directly into the banks (slot 1: banks 1-31, slot 2: banks 32-62, marker in
+bank 63, 25 sectors per bank) and writes them back from there, with its own check (four
+parities) and verify in the drive. In VICE about 18 s reading, 30 s writing with verify for 35
+tracks.
+
+> **Warning:** After `COPY DISK` with the raw path, the slot holds **raw** data in RAM and is
+> not converted back. `@CDW1`/`@CDW2` and the RAM disk `@CDM` would turn it into garbage. Inside
+> the tool a raw slot is detected: `WRITE DISK` writes it correctly, `EXPORT D64 FILE` refuses it
+> (`RAW COPY IN SLOT`), `READ DISK` and `IMPORT D64 FILE` make the slot normal again.
+
+### MS-15SECCOPY
+
+A new version of **15 Seconds Copy**, written by **Mike Pall** in 1986.
+Thanks to Mike Pall for his pioneering work! Copies normally formatted disks as raw GCR over
+the parallel cable, with track and sector grid and an interface after MS-FASTCOPY512. On
+`ms-tools.d64` and also on its own disk `ms-15seccopy.d64`, source in `15SecCopy/neu/`.
+
+Minimum requirements:
+
+| Component | Minimum requirement |
+|---|---|
+| C64 | C64 or C128 in C64 mode, also C64U |
+| REU (required) | at least 256 KB for 35 tracks, 512 KB for 40 tracks |
+| Parallel cable (required) | on VIA1 of the 1541 (SpeedDOS cable) or on the PIA (DolphinDOS 3, Multi-Speeder); if there is no PIA at `$5000` (for example under DolphinDOS 2.0 on the Multi-Speeder), `PIA` is locked (`NO PIA AT $5000 IN THIS DRIVE ROM`); the program does not check whether a cable is connected |
+| Drive | 1541 as device 8; the original ROM is enough, DolphinDos26, Multi-Speeder and RAM expansion are not needed |
+| C64 kernal | the original kernal is enough |
+
+On real hardware (C64U, 1541, REU), `BACKUP` and `VERIFY` ran over all 683 blocks without errors,
+on VIA1 under DolphinDOS 2.0 and on the PIA under DolphinDos26DD2; 35 tracks took at most 12 s
+reading and 18 s writing. Source and target were the same disk.
+
+> **Warning:** The program uses the REU as a buffer. Data stored there, including slots
+> of MS-FASTCOPY512 and MS-NIBCOPY512, may be overwritten.
+
 ### MS-NIBCOPY512 (BETA)
+
+> **Warning:** With `MS-RAM` storage, the tool overwrites almost the entire RAM of the
+> Multi-Speeder (banks 1-63) when reading and on G64 import, that is both CDR sides and any
+> RAM disk. Save important data to disk first with `@CDW1` and `@CDW2`.
 
 **BETA:** MS-NIBCOPY512 is in BETA and still under development. Functions and operation may
 still change; it has only been partly tested on real hardware. The user interface shows
@@ -193,7 +245,6 @@ still change; it has only been partly tested on real hardware. The user interfac
 
 On real hardware (C64U with a 1541, Multi-Speeder V3 with DolphinDos26DD2 on VIA1) it reads and
 writes normal disks with MS-RAM and REU (35 tracks, verify on, files byte-identical afterwards).
-Copy-protected disks have not yet been tested there.
 
 Minimum hardware requirements: C64 or C128 in C64 mode; 1541 with Switchless Multi-Speeder V3
 and DolphinDos26 or DolphinDos26DD2, or DolphinDos26UL (C64U or DolphinDOS 2 hardware); active

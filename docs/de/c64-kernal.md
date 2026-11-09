@@ -119,8 +119,8 @@ Nach dem JiffyDOS-sd2iec-Kernal (auf den früheren Monitor-Tasten):
 | Taste | Text | Wirkung |
 |---|---|---|
 | C=F3 | `@CD←` + RETURN | SD2IEC: ein Verzeichnis bzw. Disk-Image zurück |
-| C=F5 | ` "CD/:` + RETURN | auf einer Directory-Zeile: in dieses Verzeichnis/Image wechseln |
-| C=F7 | `LOAD` + Tab + `,8,1` | auf einer Directory-Zeile: diese Datei laden (RETURN selbst drücken) |
+| C=F5 | `  "CD:` + RETURN | auf einer Directory-Zeile: in dieses Verzeichnis/Image wechseln |
+| C=F7 | `LOAD` + Tab + `:` | auf einer Directory-Zeile: diese Datei laden (RETURN selbst drücken); ohne Gerätenummer gilt das mit `@9` gesetzte Gerät, sonst Gerät 8 |
 
 Vor jedem F-Tasten-Text prüft `dd_fkey_init` ($F750), ob die Cursorzeile eine
 Directory-Zeile mit Anführungszeichen in Spalte 6 ist (5-stellige
@@ -326,7 +326,7 @@ den Build **nicht** gebraucht, maßgeblich sind die Quellen in `src/`.
 
 ## Hinweise
 
-- Getestet im Emulator VICE (GUI): mit DolphinDos26 (Multi-Speeder, parallel),
+- Getestet mit DolphinDos26 (Multi-Speeder, parallel),
   DolphinDos26UL (C64U-Aufbau), JiffyDOS-1541 und Standard-1541 – LOAD, SAVE,
   VERIFY (auch `,8,1`, `,8,2`, `$`), Status (ST), IRQ/Tastatur, Einschaltbild
   PAL/NTSC. Der Kernal läuft auch auf echter Hardware (bestätigt vom Entwickler).

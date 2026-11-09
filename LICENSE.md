@@ -7,6 +7,7 @@
 | Extensions of DolphinDos26/DolphinDos26UL/DolphinDos26DD2, C64 kernal DolphinDos26, MS-Tools, the manuals | © 2025–2026 Frank Eggen |
 | DolphinDOS 3.0 | © Günther Jilg and Jan Bubela, Dolphin Software; "Dolphin" is a trademark of Jan Bubela and Günther Jilg |
 | JiffyDOS | © Mark Fellows / Creative Micro Designs; licensing today via Jim Brain, RETRO Innovations |
+| nibtools (the model for MS-NIBCOPY512) | © Pete Rittwage and contributors |
 | CBM DOS 1541, C64 kernal and BASIC | © Commodore |
 
 The software and the manuals may be used and passed on for **private, non-commercial purposes**, provided they remain unchanged and this notice is retained.
@@ -26,6 +27,7 @@ The rights of the original authors of DolphinDOS, JiffyDOS and the Commodore ROM
 | Erweiterungen von DolphinDos26/DolphinDos26UL/DolphinDos26DD2, C64-Kernal DolphinDos26, MS-Tools, die Handbücher | © 2025–2026 Frank Eggen |
 | DolphinDOS 3.0 | © Günther Jilg und Jan Bubela, Dolphin Software; „Dolphin“ ist ein Warenzeichen von Jan Bubela und Günther Jilg |
 | JiffyDOS | © Mark Fellows / Creative Micro Designs; Lizenzierung heute über Jim Brain, RETRO Innovations |
+| nibtools (Vorbild für MS-NIBCOPY512) | © Pete Rittwage und Mitwirkende |
 | CBM-DOS 1541, C64-Kernal und BASIC | © Commodore |
 
 Die Software und die Handbücher dürfen für den **privaten, nicht kommerziellen Gebrauch** genutzt und weitergegeben werden, sofern sie unverändert bleiben und dieser Hinweis erhalten bleibt.
