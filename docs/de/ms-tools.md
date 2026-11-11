@@ -59,20 +59,20 @@ Routinen: `ui_init`, `ui_exit`, `ui_puts` (Text bei `ui_row`/`ui_col` in
 | `src/drv-<name>.s`, `drive.cfg` | Laufwerksprogramme (ab $0400, höchstens 512 Bytes), per `.incbin` im Tool, per M-W hochgeladen und per M-E gestartet |
 | `buildnr/<tool>.nr` | Buildnummer je Tool |
 | `tests/test_tools.py` | LOAD, LIST, RUN, Oberfläche, Farben und Beenden jedes Tools im gepatchten VICE (GUI); vor jedem Start andere Farben gesetzt, nach dem Beenden müssen Rahmen, Hintergrund und Textfarbe wieder so sein |
-| `tests/test_memtest.py` | MS-MEMTEST512: Laufwerk 9 (fehlt) wählen, Lauf ohne Fehler, Lauf mit per Monitor verfälschtem Byte, DolphinDOS danach |
-| `tests/test_fastcopy.py [on/off] [40] [side2]` | MS-FASTCOPY512: lesen und zwei Kopien, Ziel-D64 byte-gleich zur Quelle |
-| `tests/test_fastcopy_reu.py [fall]` | MS-FASTCOPY512 mit REU: VIA1/PIA-Erkennung, Kopien byte-gleich, 40 Spuren, Formatieren, Schreibschutz, ohne REU/Parallel |
-| `tests/test_fastcopy_d64.py [fall]` | MS-FASTCOPY512: IMPORT/EXPORT D64 FILE mit MS-RAM und REU, 35/40 Spuren, Datei = Diskette, ungültige Dateien |
-| `tests/test_fastcopy_fast.py [fall]` | MS-FASTCOPY512 `TRANSFER: FAST`: VIA1, PIA, DD2, 40 Spuren, unformatiert, Schreibschutz |
-| `tests/test_fastcopy_led.py` | MS-FASTCOPY512: rote LED beim Lesen/Schreiben, DIRECTORY mit Blättern, fehlendes Laufwerk |
-| `tests/test_nibcopy.py` | MS-NIBCOPY512: Lesen/Schreiben über MS-RAM und REU, Ziel bitweise = Quelle, TRACK INFO, Presets (20 Prüfungen) |
+| `tests/test_memtest.py` | MS-MEMTEST: Laufwerk 9 (fehlt) wählen, Lauf ohne Fehler, Lauf mit per Monitor verfälschtem Byte, DolphinDOS danach |
+| `tests/test_fastcopy.py [on/off] [40] [side2]` | MS-FASTCOPY: lesen und zwei Kopien, Ziel-D64 byte-gleich zur Quelle |
+| `tests/test_fastcopy_reu.py [fall]` | MS-FASTCOPY mit REU: VIA1/PIA-Erkennung, Kopien byte-gleich, 40 Spuren, Formatieren, Schreibschutz, ohne REU/Parallel |
+| `tests/test_fastcopy_d64.py [fall]` | MS-FASTCOPY: IMPORT/EXPORT D64 FILE mit MS-RAM und REU, 35/40 Spuren, Datei = Diskette, ungültige Dateien |
+| `tests/test_fastcopy_fast.py [fall]` | MS-FASTCOPY `TRANSFER: FAST`: VIA1, PIA, DD2, 40 Spuren, unformatiert, Schreibschutz |
+| `tests/test_fastcopy_led.py` | MS-FASTCOPY: rote LED beim Lesen/Schreiben, DIRECTORY mit Blättern, fehlendes Laufwerk |
+| `tests/test_nibcopy.py` | MS-NIBCOPY: Lesen/Schreiben über MS-RAM und REU, Ziel bitweise = Quelle, TRACK INFO, Presets (20 Prüfungen) |
 | `tests/test_rs232.py` | MS-RS232: LIST-Kopf, Installieren, Senden/Empfangen über die RS-232-Emulation von VICE (TCP-Testserver), Floppyzugriff bei offener RS-232-Datei, Aushängen, Wiedereinhängen (8 Prüfungen) |
-| `tests/test_import.py [name\|test] [reu]` | MS-NIBCOPY512: IMPORT G64 FILE von Laufwerk 9, WRITE DISK, Ziel = G64-Datei, bei Spielen Start der Kopie |
-| `tests/test_nibcopy_dir.py` | MS-NIBCOPY512: DIRECTORY, END TRACK nach dem Import, Spuren im MS-RAM überstehen das Directory |
-| `tests/test_nibcopy_names.py [Füllbyte ...]` | MS-NIBCOPY512: Vorschlag und Eingabe von Laufwerk und Dateiname bei vorbelegtem RAM |
-| `tests/test_led.py` | MS-NIBCOPY512: rote LED beim Lesen an, danach aus |
-| `tests/test_export.py [name\|test] [reu]` | MS-NIBCOPY512: EXPORT G64 FILE auf Laufwerk 9 (Verzeichnis), Datei = Quelle, bei Spielen aus `../G64` Start der exportierten Datei |
-| `tests/test_protected.py` u. a. | MS-NIBCOPY512 mit G64-Images mit Kopierschutz (Ordner `../G64`), Profiling (`profile_*.py`) |
+| `tests/test_import.py [name\|test] [reu]` | MS-NIBCOPY: IMPORT G64 FILE von Laufwerk 9, WRITE DISK, Ziel = G64-Datei, bei Spielen Start der Kopie |
+| `tests/test_nibcopy_dir.py` | MS-NIBCOPY: DIRECTORY, END TRACK nach dem Import, Spuren im MS-RAM überstehen das Directory |
+| `tests/test_nibcopy_names.py [Füllbyte ...]` | MS-NIBCOPY: Vorschlag und Eingabe von Laufwerk und Dateiname bei vorbelegtem RAM |
+| `tests/test_led.py` | MS-NIBCOPY: rote LED beim Lesen an, danach aus |
+| `tests/test_export.py [name\|test] [reu]` | MS-NIBCOPY: EXPORT G64 FILE auf Laufwerk 9 (Verzeichnis), Datei = Quelle, bei Spielen aus `../G64` Start der exportierten Datei |
+| `tests/test_protected.py` u. a. | MS-NIBCOPY mit G64-Images mit Kopierschutz (Ordner `../G64`), Profiling (`profile_*.py`) |
 
 ## Bauen
 
@@ -90,8 +90,8 @@ die das `SYS` zeigt (`exomizer3 sfx <einsprung> -n -Di_load_addr=… -Di_raw=1`;
 Nach dem Entpacken springt sie an den Einsprung des Tools. Exomizer 3.1
 baut man aus `../Referenzen/krill-loader-v194/loader/tools/exomizer-3.1/src`
 (`make`) und legt das Programm als `exomizer3` in den Pfad
-(`make EXOMIZER=…` für einen anderen Ort). Ersparnis: MS-NIBCOPY512 86 → 47,
-MS-FASTCOPY512 17 → 12, MS-MEMTEST512 15 → 12 Blöcke.
+(`make EXOMIZER=…` für einen anderen Ort). Ersparnis: MS-NIBCOPY 86 → 47,
+MS-FASTCOPY 17 → 12, MS-MEMTEST 15 → 12 Blöcke.
 
 Neues Tool: `src/<name>.s` anlegen, `<name>` in `TOOLS` im Makefile eintragen,
 Testfall in `tests/test_tools.py` ergänzen.
@@ -101,12 +101,12 @@ Testfall in `tests/test_tools.py` ergänzen.
 | Name | Funktion |
 |---|---|
 | `MS-STATUS` | Fehlerkanal des Laufwerks anzeigen, Menü READ STATUS / QUIT (Vorlage für weitere Tools) |
-| `MS-MEMTEST512` | RAM-Test der 512 KB SRAM (64 Bänke): 4 Muster, 1-99 Läufe, Anzeige je Bank |
-| `MS-FASTCOPY512` | Diskettenkopie über das 512-KB-RAM (Datenkopie wie CDR/CDW), 35/40/AUTO Spuren, Verify an/aus, CDR1/CDR2 und CDW1/CDW2, mehrere Kopien |
-| `MS-NIBCOPY512` (BETA) | Nibble-Kopierer nach dem Vorbild der nibtools: Spuren bitgenau lesen und schreiben (Syncs, Lücken, Spur 36–42, Halbspuren, Weak Bits), Ablage im Multi-Speeder-RAM oder in der REU; läuft auch mit DolphinDos26UL (C64U), dann nur mit REU |
+| `MS-MEMTEST` | RAM-Test der 512 KB SRAM (64 Bänke): 4 Muster, 1-99 Läufe, Anzeige je Bank |
+| `MS-FASTCOPY` | Diskettenkopie über das 512-KB-RAM (Datenkopie wie CDR/CDW), 35/40/AUTO Spuren, Verify an/aus, CDR1/CDR2 und CDW1/CDW2, mehrere Kopien |
+| `MS-NIBCOPY` (BETA) | Nibble-Kopierer nach dem Vorbild der nibtools: Spuren bitgenau lesen und schreiben (Syncs, Lücken, Spur 36–42, Halbspuren, Weak Bits), Ablage im Multi-Speeder-RAM oder in der REU; läuft auch mit DolphinDos26UL (C64U), dann nur mit REU |
 | `MS-RS232` | RS-232-Treiber für Gerät 2 am User-Port (der DolphinDos26-Kernal hat keine RS-232-Routinen): Routinen des Original-Kernals im RAM bei $9800-$9FFF, OPEN 2,2,… wie beim Original-C64 |
 
-### MS-MEMTEST512
+### MS-MEMTEST
 
 Das Prüfprogramm `src/drv-memtest.s` läuft im Laufwerk. Ein Lauf: für jedes
 Muster (`$55`, `$AA`, Adresse = Offset ⊕ Seite ⊕ Bank, Adresse invertiert)
@@ -126,7 +126,7 @@ dem das Tool geladen wurde), QUIT; Werte mit Cursor links/rechts oder RETURN
 ändern. Die Laufwerksroutinen kommen aus `src/drive.s` (`M-E`/`M-R` werden
 bei Übertragungsfehlern bis zu dreimal wiederholt).
 
-### MS-FASTCOPY512
+### MS-FASTCOPY
 
 > **Achtung:** Mit Speicher `MS-RAM` überschreibt das Tool beim Lesen und beim D64-Import
 > den Inhalt des gewählten Slots, also die CDR-Seite und eine dort liegende RAM-Disk.
@@ -143,7 +143,7 @@ Spur für Spur mit Anzeige (Datenkopie wie `CDR`/`CDW`).
 Benutzt die MS-Addon-API von DolphinDos26 (Sprungtabelle ab `$3FFF`, siehe
 `dd25/README.md`).
 
-Menü zweispaltig wie bei MS-NIBCOPY512: links `SETTINGS`, rechts `ACTIONS`.
+Menü zweispaltig wie bei MS-NIBCOPY: links `SETTINGS`, rechts `ACTIONS`.
 CRSR hoch/runter geht durch alle Punkte, CRSR links/rechts ändert eine
 Einstellung bzw. springt von rechts nach links.
 
@@ -156,7 +156,7 @@ Einstellung bzw. springt von rechts nach links.
     Laufwerkswechsel und zeigt `PARALLEL: PIA` bzw. `PARALLEL: VIA1` (auch an DolphinDos26DD2, dessen
     PIA nur die RAM-Bänke schaltet, und am Original-DolphinDOS 2.0 aus Bank 2, ab Build 29); ohne sie
     `NO PARALLEL`, und REU wird nicht angeboten. Die Sektoren laufen dabei über
-    `U1`/`U2` (langsamer als `MS-RAM`, das nur im Laufwerk arbeitet). MS-NIBCOPY512
+    `U1`/`U2` (langsamer als `MS-RAM`, das nur im Laufwerk arbeitet). MS-NIBCOPY
     benutzt die REU von unten: Bei einer kleinen REU können sich die Daten beider
     Tools überschreiben, das Tool erkennt das nicht in jedem Fall
   - `TRACKS: 35/40/AUTO` – AUTO prüft Spur 36 wie `CDR`
@@ -176,7 +176,7 @@ Einstellung bzw. springt von rechts nach links.
   einer Lesung
 - `EXPORT D64 FILE` / `IMPORT D64 FILE`: Inhalt des Speichers als D64-Datei auf
   ein Laufwerk schreiben bzw. von dort laden, typischerweise ein SD2IEC. Dialoge
-  wie bei MS-NIBCOPY512 (`EXPORT TO DRIVE: 09`, `FILE NAME:`, `.D64` wird
+  wie bei MS-NIBCOPY (`EXPORT TO DRIVE: 09`, `FILE NAME:`, `.D64` wird
   angehängt, eine vorhandene Datei wird beim Export ersetzt). Import: 35 oder 40
   Spuren, auch mit Fehlertabelle (wird ignoriert), andere Größen melden
   `NOT A VALID D64 FILE`. Bei `MS-RAM` kann dessen Laufwerk nicht Ziel oder Quelle
@@ -213,7 +213,7 @@ Verify im Laufwerk. In VICE etwa 18 s Lesen, 30 s Schreiben mit Verify für 35 S
 
 Eine neue Fassung von **15 Seconds Copy**, das **Mike Pall** 1986 geschrieben hat.
 Danke an Mike Pall für seine Pionierarbeit! Kopiert normal formatierte Disketten als rohes GCR über
-das Parallelkabel, mit Spur- und Sektorraster und Oberfläche nach MS-FASTCOPY512. Liegt auf
+das Parallelkabel, mit Spur- und Sektorraster und Oberfläche nach MS-FASTCOPY. Liegt auf
 `ms-tools.d64` und zusätzlich auf der eigenen Diskette `ms-15seccopy.d64`, Quelltext in `15SecCopy/neu/`.
 
 Mindestanforderungen:
@@ -223,7 +223,7 @@ Mindestanforderungen:
 | C64 | C64 oder C128 im C64-Modus, auch C64U |
 | REU (zwingend) | mindestens 256 KB für 35 Spuren, 512 KB für 40 Spuren |
 | Parallelkabel (zwingend) | am VIA1 der 1541 (SpeedDOS-Kabel) oder am PIA (DolphinDOS 3, Multi-Speeder); liegt bei `$5000` kein PIA (z. B. unter DolphinDOS 2.0 auf dem Multi-Speeder), ist `PIA` gesperrt (`NO PIA AT $5000 IN THIS DRIVE ROM`); ob ein Kabel steckt, prüft das Programm nicht |
-| Laufwerk | 1541 als Gerät 8; das Original-ROM genügt, DolphinDos26, Multi-Speeder und RAM-Erweiterung sind nicht nötig |
+| Laufwerk | 1541 oder 1571 als Gerät 8; das Original-ROM genügt, DolphinDos26, Multi-Speeder und RAM-Erweiterung sind nicht nötig; eine 1571 mit DolphinDOS stellt das Programm für `BACKUP` und `VERIFY` mit `X-` auf 1 MHz und danach mit `X+` wieder auf 2 MHz |
 | C64-Kernal | der Original-Kernal genügt |
 
 Auf echter Hardware (C64U, 1541, REU) liefen `BACKUP` und `VERIFY` über alle 683 Blöcke ohne Fehler,
@@ -231,17 +231,17 @@ am VIA1 unter DolphinDOS 2.0 und am PIA unter DolphinDos26DD2; 35 Spuren braucht
 zum Lesen und 18 s zum Schreiben. Quelle und Ziel waren dabei dieselbe Diskette.
 
 > **Achtung:** Das Programm benutzt die REU als Zwischenspeicher. Dort abgelegte Daten, auch Slots
-> von MS-FASTCOPY512 und MS-NIBCOPY512, können überschrieben werden.
+> von MS-FASTCOPY und MS-NIBCOPY, können überschrieben werden.
 
-### MS-NIBCOPY512 (BETA)
+### MS-NIBCOPY (BETA)
 
 > **Achtung:** Mit Ablage `MS-RAM` überschreibt das Tool beim Lesen und beim G64-Import
 > fast das gesamte RAM des Multi-Speeders (Bank 1-63), also beide CDR-Seiten und eine
 > RAM-Disk. Wichtige Daten vorher mit `@CDW1` und `@CDW2` auf Diskette sichern.
 
-**BETA:** MS-NIBCOPY512 befindet sich im BETA-Stadium und wird weiterentwickelt. Funktionen und
+**BETA:** MS-NIBCOPY befindet sich im BETA-Stadium und wird weiterentwickelt. Funktionen und
 Bedienung können sich noch ändern; auf echter Hardware ist es erst teilweise getestet. Die
-Oberfläche zeigt `MS-NIBCOPY512 BETA`.
+Oberfläche zeigt `MS-NIBCOPY BETA`.
 
 Auf echter Hardware (C64U mit einer 1541, Multi-Speeder V3 mit DolphinDos26DD2 am VIA1) liest und
 schreibt es normale Disketten mit MS-RAM und REU (35 Spuren, Verify an, Dateien danach byte-gleich).
@@ -252,7 +252,7 @@ DolphinDOS-2-Hardware); aktives Parallelkabel (PIA oder VIA1); Speicher MS-RAM (
 oder eine REU, die für die letzte Spur reicht (512 KB für 35-40 Spuren, ab 1 MB für Spur 42 mit
 Halbspuren). Eine der beiden Ablagen ist zwingend nötig; unter DolphinDos26UL nur die REU, ohne sie
 zeigt das Tool `NEED REU` und sperrt Lesen und Schreiben.
-MS-NIBCOPY512 ist nicht mit DolphinDOS 2 getestet.
+MS-NIBCOPY ist nicht mit DolphinDOS 2 getestet.
 
 
 Nibble-Kopierer nach dem Vorbild der nibtools
@@ -288,7 +288,7 @@ ebenfalls über ein Parallelkabel, 8 KB je Spur.
   Einstellung bzw. springt aus der rechten Spalte nach links
 - Während Lesen und Schreiben leuchtet die rote LED des Laufwerks (Payload:
   mit dem Motor; danach setzt das DOS sie wieder selbst)
-- DIRECTORY: Inhaltsverzeichnis des gewählten Laufwerks wie bei MS-FASTCOPY512
+- DIRECTORY: Inhaltsverzeichnis des gewählten Laufwerks wie bei MS-FASTCOPY
   (CRSR auf/ab: Zeile, links/rechts: Seite; RETURN oder `_`: zurück). Die Spuren
   im Speicher bleiben erhalten; der Payload wird danach neu geladen, weil die
   DOS-Puffer dort liegen, wo er steht

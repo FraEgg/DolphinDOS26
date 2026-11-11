@@ -47,7 +47,7 @@ replaces `1541DolphinDos26.bin` as bank 8 of the Multi-Speeder EPROM (`$70000`).
 - Power-on message `73, DOLPHINDOS26  DD2` (same length as `1541`).
 - Cold start like UL, but with the signature `$A5 $5A` in `$60ED` (`$60F0` is
   `ms_trks` here). `UJ` keeps settings and RAM disk.
-- MS-NIBCOPY512 needs at least build 48. Older builds find the PIA and
+- MS-NIBCOPY needs at least build 48. Older builds find the PIA and
   send there; on the DD2 ROM they report `NO ANSWER FROM DRIVE CODE`.
 
 Test: `tests/test_dd2.py`.
@@ -115,7 +115,11 @@ interpretations are marked with "(vermutlich)" ("presumably").
 - RAM banks: the bank number is written to DDRB (`$5002`) when CRB bit 2 = 0.
   Because of the pull-ups on PB0–5: logical bank n = physical
   bank 63−n. Logical bank 0 is the working RAM of DolphinDOS.
-- There are no longer any ROM checksums: DD25 does not evaluate them on reset.
+- ROM checksum as in the original (DD26, enabled again): on reset the drive sums
+  `$E000-$FFFF` (target `$E0`) and `$C000-$DFFF` (target `$C0`); if one is wrong,
+  the drive blinks the error. The adjust bytes `$FEE6` (echksm) and `$C000`
+  (cchksm) are set by `tools/pruefsumme.py` after linking (`make`, `make ul`,
+  `make dd2`); `tools/pruefsumme.py <rom> --pruefen` only verifies.
 
 ## MS-Addon API (for C64 programs)
 
@@ -140,4 +144,4 @@ version (e.g. for the 1571) provides the same table.
 Call: `"M-E" <lo> <hi> <p1> <p2> <p3>` on channel 15, the parameters are
 at `cmdbuf+5` onwards. As with every command, the result is in the error channel
 (`00, OK,00,00` or e.g. `23,READ ERROR,17,05`). Programs first check
-the signature and version via `M-R` from `$3FFC`. Example: MS-FASTCOPY512.
+the signature and version via `M-R` from `$3FFC`. Example: MS-FASTCOPY.

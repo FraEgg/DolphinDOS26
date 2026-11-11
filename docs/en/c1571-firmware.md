@@ -126,7 +126,7 @@ C128 and in C64 mode.
 | $F815 | xcmd_q fallback | `jmp ms_xq` (RAM disk block transfer) |
 | $FC97 | xcmd_z: `jsr z_prepare` | `jmp ms_xz` |
 | $AADD | ptch64 (seek job on track 53 without setjob) | `jmp ms_ptch64` (double-sided RAM disk) |
-| $EAE5 | ROM checksum | `nop nop` (as DD25-1571) |
+| $C000 | cchksm $84 | adjust byte of the ROM checksum, computed by `tools/pruefsumme.py` (the check at $EAE5, `bne perr2`, is enabled again) |
 | $E5C1 | ".3" | "26" → `73,DOLPHINDOS26 1571` |
 
 Differences from the 1541 that the addon takes into account: binary track

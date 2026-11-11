@@ -59,20 +59,20 @@ Routines: `ui_init`, `ui_exit`, `ui_puts` (text at `ui_row`/`ui_col` in
 | `src/drv-<name>.s`, `drive.cfg` | drive programs (from $0400, at most 512 bytes), via `.incbin` in the tool, uploaded via M-W and started via M-E |
 | `buildnr/<tool>.nr` | build number per tool |
 | `tests/test_tools.py` | LOAD, LIST, RUN, interface, colors and exit of each tool in the patched VICE (GUI); different colors are set before each start, after exit border, background and text color must be the same again |
-| `tests/test_memtest.py` | MS-MEMTEST512: select drive 9 (missing), run without errors, run with a byte corrupted via the monitor, DolphinDOS afterwards |
-| `tests/test_fastcopy.py [on/off] [40] [side2]` | MS-FASTCOPY512: read and two copies, target D64 byte-identical to the source |
-| `tests/test_fastcopy_reu.py [case]` | MS-FASTCOPY512 with REU: VIA1/PIA detection, copies byte-identical, 40 tracks, formatting, write protection, without REU/parallel |
-| `tests/test_fastcopy_d64.py [case]` | MS-FASTCOPY512: IMPORT/EXPORT D64 FILE with MS-RAM and REU, 35/40 tracks, file = disk, invalid files |
-| `tests/test_fastcopy_fast.py [case]` | MS-FASTCOPY512 `TRANSFER: FAST`: VIA1, PIA, DD2, 40 tracks, unformatted, write protection |
-| `tests/test_fastcopy_led.py` | MS-FASTCOPY512: red LED while reading/writing, DIRECTORY with paging, missing drive |
-| `tests/test_nibcopy.py` | MS-NIBCOPY512: read/write via MS-RAM and REU, target bit-identical to source, TRACK INFO, presets (20 checks) |
+| `tests/test_memtest.py` | MS-MEMTEST: select drive 9 (missing), run without errors, run with a byte corrupted via the monitor, DolphinDOS afterwards |
+| `tests/test_fastcopy.py [on/off] [40] [side2]` | MS-FASTCOPY: read and two copies, target D64 byte-identical to the source |
+| `tests/test_fastcopy_reu.py [case]` | MS-FASTCOPY with REU: VIA1/PIA detection, copies byte-identical, 40 tracks, formatting, write protection, without REU/parallel |
+| `tests/test_fastcopy_d64.py [case]` | MS-FASTCOPY: IMPORT/EXPORT D64 FILE with MS-RAM and REU, 35/40 tracks, file = disk, invalid files |
+| `tests/test_fastcopy_fast.py [case]` | MS-FASTCOPY `TRANSFER: FAST`: VIA1, PIA, DD2, 40 tracks, unformatted, write protection |
+| `tests/test_fastcopy_led.py` | MS-FASTCOPY: red LED while reading/writing, DIRECTORY with paging, missing drive |
+| `tests/test_nibcopy.py` | MS-NIBCOPY: read/write via MS-RAM and REU, target bit-identical to source, TRACK INFO, presets (20 checks) |
 | `tests/test_rs232.py` | MS-RS232: LIST header, install, send/receive via VICE's RS-232 emulation (TCP test server), floppy access with an open RS-232 file, unhook, rehook (8 checks) |
-| `tests/test_import.py [name\|test] [reu]` | MS-NIBCOPY512: IMPORT G64 FILE from drive 9, WRITE DISK, target = G64 file, for games start of the copy |
-| `tests/test_nibcopy_dir.py` | MS-NIBCOPY512: DIRECTORY, END TRACK after import, tracks in MS-RAM survive the directory |
-| `tests/test_nibcopy_names.py [fill byte ...]` | MS-NIBCOPY512: suggestion and input of drive and file name with pre-filled RAM |
-| `tests/test_led.py` | MS-NIBCOPY512: red LED on during reading, off afterwards |
-| `tests/test_export.py [name\|test] [reu]` | MS-NIBCOPY512: EXPORT G64 FILE to drive 9 (directory), file = source, for games from `../G64` start of the exported file |
-| `tests/test_protected.py` etc. | MS-NIBCOPY512 with copy-protected G64 images (folder `../G64`), profiling (`profile_*.py`) |
+| `tests/test_import.py [name\|test] [reu]` | MS-NIBCOPY: IMPORT G64 FILE from drive 9, WRITE DISK, target = G64 file, for games start of the copy |
+| `tests/test_nibcopy_dir.py` | MS-NIBCOPY: DIRECTORY, END TRACK after import, tracks in MS-RAM survive the directory |
+| `tests/test_nibcopy_names.py [fill byte ...]` | MS-NIBCOPY: suggestion and input of drive and file name with pre-filled RAM |
+| `tests/test_led.py` | MS-NIBCOPY: red LED on during reading, off afterwards |
+| `tests/test_export.py [name\|test] [reu]` | MS-NIBCOPY: EXPORT G64 FILE to drive 9 (directory), file = source, for games from `../G64` start of the exported file |
+| `tests/test_protected.py` etc. | MS-NIBCOPY with copy-protected G64 images (folder `../G64`), profiling (`profile_*.py`) |
 
 ## Building
 
@@ -90,8 +90,8 @@ the `SYS` points to (`exomizer3 sfx <einsprung> -n -Di_load_addr=… -Di_raw=1`;
 After unpacking, it jumps to the tool's entry point. Exomizer 3.1
 is built from `../Referenzen/krill-loader-v194/loader/tools/exomizer-3.1/src`
 (`make`) and the program is placed in the path as `exomizer3`
-(`make EXOMIZER=…` for a different location). Savings: MS-NIBCOPY512 86 → 47,
-MS-FASTCOPY512 17 → 12, MS-MEMTEST512 15 → 12 blocks.
+(`make EXOMIZER=…` for a different location). Savings: MS-NIBCOPY 86 → 47,
+MS-FASTCOPY 17 → 12, MS-MEMTEST 15 → 12 blocks.
 
 New tool: create `src/<name>.s`, enter `<name>` in `TOOLS` in the Makefile,
 add a test case in `tests/test_tools.py`.
@@ -101,12 +101,12 @@ add a test case in `tests/test_tools.py`.
 | Name | Function |
 |---|---|
 | `MS-STATUS` | show the drive's error channel, menu READ STATUS / QUIT (template for further tools) |
-| `MS-MEMTEST512` | RAM test of the 512 KB SRAM (64 banks): 4 patterns, 1-99 runs, display per bank |
-| `MS-FASTCOPY512` | disk copy via the 512 KB RAM (data copy like CDR/CDW), 35/40/AUTO tracks, verify on/off, CDR1/CDR2 and CDW1/CDW2, multiple copies |
-| `MS-NIBCOPY512` (BETA) | nibble copier modeled on nibtools: read and write tracks with bit accuracy (syncs, gaps, tracks 36–42, half tracks, weak bits), storage in Multi-Speeder RAM or in the REU; also runs with DolphinDos26UL (C64U), then only with REU |
+| `MS-MEMTEST` | RAM test of the 512 KB SRAM (64 banks): 4 patterns, 1-99 runs, display per bank |
+| `MS-FASTCOPY` | disk copy via the 512 KB RAM (data copy like CDR/CDW), 35/40/AUTO tracks, verify on/off, CDR1/CDR2 and CDW1/CDW2, multiple copies |
+| `MS-NIBCOPY` (BETA) | nibble copier modeled on nibtools: read and write tracks with bit accuracy (syncs, gaps, tracks 36–42, half tracks, weak bits), storage in Multi-Speeder RAM or in the REU; also runs with DolphinDos26UL (C64U), then only with REU |
 | `MS-RS232` | RS-232 driver for device 2 on the user port (the DolphinDos26 kernal has no RS-232 routines): routines of the original kernal in RAM at $9800-$9FFF, OPEN 2,2,… as on the original C64 |
 
-### MS-MEMTEST512
+### MS-MEMTEST
 
 The test program `src/drv-memtest.s` runs in the drive. One run: for each
 pattern (`$55`, `$AA`, address = offset ⊕ page ⊕ bank, address inverted)
@@ -126,7 +126,7 @@ the tool was loaded from), QUIT; change values with cursor left/right or RETURN.
 The drive routines come from `src/drive.s` (`M-E`/`M-R` are
 retried up to three times on transfer errors).
 
-### MS-FASTCOPY512
+### MS-FASTCOPY
 
 > **Warning:** With `MS-RAM` storage, the tool overwrites the contents of the selected
 > slot when reading and on D64 import, that is the CDR side and any RAM disk stored there.
@@ -143,7 +143,7 @@ track by track with display (data copy like `CDR`/`CDW`).
 Uses the MS-Addon API of DolphinDos26 (jump table from `$3FFF`, see
 `dd25/README.md`).
 
-Two-column menu as in MS-NIBCOPY512: `SETTINGS` on the left, `ACTIONS` on the right.
+Two-column menu as in MS-NIBCOPY: `SETTINGS` on the left, `ACTIONS` on the right.
 CRSR up/down moves through all items, CRSR left/right changes a setting or
 jumps from right to left.
 
@@ -156,7 +156,7 @@ jumps from right to left.
     every drive change and shows `PARALLEL: PIA` or `PARALLEL: VIA1` (also on DolphinDos26DD2, whose
     PIA only switches the RAM banks, and on the original DolphinDOS 2.0 from bank 2, from Build 29); without it
     `NO PARALLEL`, and the REU is not offered. The sectors travel via
-    `U1`/`U2` (slower than `MS-RAM`, which works only inside the drive). MS-NIBCOPY512
+    `U1`/`U2` (slower than `MS-RAM`, which works only inside the drive). MS-NIBCOPY
     uses the REU from the bottom: with a small REU the data of the two tools can
     overwrite each other, which the tool does not always detect
   - `TRACKS: 35/40/AUTO` – AUTO checks track 36 like `CDR`
@@ -176,7 +176,7 @@ jumps from right to left.
   one read
 - `EXPORT D64 FILE` / `IMPORT D64 FILE`: write the contents of the memory as a D64
   file to a drive or load it from there, typically an SD2IEC. Dialogs as in
-  MS-NIBCOPY512 (`EXPORT TO DRIVE: 09`, `FILE NAME:`, `.D64` is appended, an
+  MS-NIBCOPY (`EXPORT TO DRIVE: 09`, `FILE NAME:`, `.D64` is appended, an
   existing file is replaced on export). Import: 35 or 40 tracks, also with an
   error table (ignored), other sizes report `NOT A VALID D64 FILE`. With `MS-RAM`,
   its drive cannot be target or source; writing into the MS-RAM needs no new API
@@ -213,7 +213,7 @@ tracks.
 
 A new version of **15 Seconds Copy**, written by **Mike Pall** in 1986.
 Thanks to Mike Pall for his pioneering work! Copies normally formatted disks as raw GCR over
-the parallel cable, with track and sector grid and an interface after MS-FASTCOPY512. On
+the parallel cable, with track and sector grid and an interface after MS-FASTCOPY. On
 `ms-tools.d64` and also on its own disk `ms-15seccopy.d64`, source in `15SecCopy/neu/`.
 
 Minimum requirements:
@@ -223,7 +223,7 @@ Minimum requirements:
 | C64 | C64 or C128 in C64 mode, also C64U |
 | REU (required) | at least 256 KB for 35 tracks, 512 KB for 40 tracks |
 | Parallel cable (required) | on VIA1 of the 1541 (SpeedDOS cable) or on the PIA (DolphinDOS 3, Multi-Speeder); if there is no PIA at `$5000` (for example under DolphinDOS 2.0 on the Multi-Speeder), `PIA` is locked (`NO PIA AT $5000 IN THIS DRIVE ROM`); the program does not check whether a cable is connected |
-| Drive | 1541 as device 8; the original ROM is enough, DolphinDos26, Multi-Speeder and RAM expansion are not needed |
+| Drive | 1541 or 1571 as device 8; the original ROM is enough, DolphinDos26, Multi-Speeder and RAM expansion are not needed; for `BACKUP` and `VERIFY` the program sets a 1571 with DolphinDOS to 1 MHz with `X-` and back to 2 MHz with `X+` afterwards |
 | C64 kernal | the original kernal is enough |
 
 On real hardware (C64U, 1541, REU), `BACKUP` and `VERIFY` ran over all 683 blocks without errors,
@@ -231,17 +231,17 @@ on VIA1 under DolphinDOS 2.0 and on the PIA under DolphinDos26DD2; 35 tracks too
 reading and 18 s writing. Source and target were the same disk.
 
 > **Warning:** The program uses the REU as a buffer. Data stored there, including slots
-> of MS-FASTCOPY512 and MS-NIBCOPY512, may be overwritten.
+> of MS-FASTCOPY and MS-NIBCOPY, may be overwritten.
 
-### MS-NIBCOPY512 (BETA)
+### MS-NIBCOPY (BETA)
 
 > **Warning:** With `MS-RAM` storage, the tool overwrites almost the entire RAM of the
 > Multi-Speeder (banks 1-63) when reading and on G64 import, that is both CDR sides and any
 > RAM disk. Save important data to disk first with `@CDW1` and `@CDW2`.
 
-**BETA:** MS-NIBCOPY512 is in BETA and still under development. Functions and operation may
+**BETA:** MS-NIBCOPY is in BETA and still under development. Functions and operation may
 still change; it has only been partly tested on real hardware. The user interface shows
-`MS-NIBCOPY512 BETA`.
+`MS-NIBCOPY BETA`.
 
 On real hardware (C64U with a 1541, Multi-Speeder V3 with DolphinDos26DD2 on VIA1) it reads and
 writes normal disks with MS-RAM and REU (35 tracks, verify on, files byte-identical afterwards).
@@ -252,7 +252,7 @@ parallel cable (PIA or VIA1); MS-RAM storage (Multi-Speeder only) or an REU larg
 end track (512 KB for 35-40 tracks, 1 MB or more for track 42 with half tracks). One of the two
 storage options is required; with DolphinDos26UL only the REU, without it the tool shows
 `NEED REU` and blocks reading and writing.
-MS-NIBCOPY512 has not been tested with DolphinDOS 2.
+MS-NIBCOPY has not been tested with DolphinDOS 2.
 
 Nibble copier modeled on nibtools
 (github.com/rittwage/nibtools), ported to the C64. A payload
@@ -287,7 +287,7 @@ cable, 8 KB per track.
   setting or jumps from the right column to the left
 - During reading and writing, the drive's red LED is lit (payload:
   with the motor; afterwards the DOS sets it again itself)
-- DIRECTORY: directory of the selected drive as in MS-FASTCOPY512
+- DIRECTORY: directory of the selected drive as in MS-FASTCOPY
   (CRSR up/down: line, left/right: page; RETURN or `_`: back). The tracks in
   memory are kept; the payload is reloaded afterwards, because the DOS buffers
   are where it sits

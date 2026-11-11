@@ -60,7 +60,7 @@ ROM_MANUALS = ('DolphinDos26_Handbuch.pdf', 'DolphinDos26_Manual.pdf',
                'DolphinDos26UL_Handbuch.pdf', 'DolphinDos26UL_Manual.pdf')
 # Every tool on ms-tools.d64 is published; the disk is copied unchanged, so the MD5
 # stated in the manuals applies to the published disk as well.
-PRGS = ['ms-status', 'ms-memtest512', 'ms-fastcopy512', 'ms-nibcopy512', 'ms-rs232', 'ms-15seccopy']
+PRGS = ['ms-status', 'ms-memtest', 'ms-fastcopy', 'ms-nibcopy', 'ms-rs232', 'ms-15seccopy']
 STAMP = REPO / 'tools' / 'translated-from.json'
 
 

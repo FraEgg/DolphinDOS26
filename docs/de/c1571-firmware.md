@@ -125,7 +125,7 @@ im C128- und im C64-Modus.
 | $F815 | xcmd_q-Rückfallweg | `jmp ms_xq` (RAM-Disk-Blocktransfer) |
 | $FC97 | xcmd_z: `jsr z_prepare` | `jmp ms_xz` |
 | $AADD | ptch64 (Suchjob Spur 53 ohne setjob) | `jmp ms_ptch64` (doppelseitige RAM-Disk) |
-| $EAE5 | ROM-Prüfsumme | `nop nop` (wie DD25-1571) |
+| $C000 | cchksm $84 | Abgleichbyte der ROM-Prüfsumme, berechnet von `tools/pruefsumme.py` (die Prüfung bei $EAE5, `bne perr2`, ist wieder eingeschaltet) |
 | $E5C1 | „.3“ | „26“ → `73,DOLPHINDOS26 1571` |
 
 Unterschiede zur 1541, die das Addon berücksichtigt: binärer Track-Cache
