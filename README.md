@@ -126,7 +126,7 @@ RUN
 |---|---|---|
 | `MS-STATUS` | 23 | Shows the drive error channel |
 | `MS-MEMTEST` | 27 | Tests the 512 KB SRAM (64 banks) with 4 patterns, 1 to 99 runs, result per bank |
-| `MS-FASTCOPY` | 39 | Disk copy through the 512 KB RAM or a REU (`TRANSFER: FAST` with its own fast drive code), 35/40/auto tracks, verify on/off, several copies, directory view, D64 file import and export |
+| `MS-FASTCOPY` | 43 | Disk copy through the 512 KB RAM or a REU (`TRANSFER: FAST` with its own fast drive code), 35/40/auto tracks, verify on/off, `ON ERROR: STOP/SKIP` (skip faulty tracks and count them), several copies, directory view, D64 file import and export; on the 1571 also double-sided disks and D71 files |
 | `MS-NIBCOPY` | 52 (BETA) | Nibble copier after the model of nibtools: reads and writes tracks bit by bit (syncs, gaps, tracks 36 to 42, half tracks, weak bits), storage in the Multi-Speeder RAM or a REU, G64 import and export; on the 1571 with index hole (same track position as the original), on the C128 at 2 MHz |
 | `MS-RS232` | 3 | RS-232 driver in RAM at $9800 to $9FFF, because the kernal has no RS-232 routines |
 | `MS-15SECCOPY` | 18 | New version of 15 Seconds Copy by Mike Pall: copies normally formatted disks as raw GCR over the parallel cable |
@@ -352,7 +352,7 @@ RUN
 |---|---|---|
 | `MS-STATUS` | 23 | Zeigt den Fehlerkanal des Laufwerks |
 | `MS-MEMTEST` | 27 | Prüft die 512 KB SRAM (64 Bänke) mit 4 Mustern, 1 bis 99 Läufe, Ergebnis je Bank |
-| `MS-FASTCOPY` | 39 | Diskettenkopie über das 512-KB-RAM oder eine REU (`TRANSFER: FAST` mit eigenem schnellen Laufwerkscode), 35/40/AUTO Spuren, Verify an/aus, mehrere Kopien, Directory-Anzeige, D64-Import und -Export |
+| `MS-FASTCOPY` | 43 | Diskettenkopie über das 512-KB-RAM oder eine REU (`TRANSFER: FAST` mit eigenem schnellen Laufwerkscode), 35/40/AUTO Spuren, Verify an/aus, `ON ERROR: STOP/SKIP` (fehlerhafte Spuren überspringen und zählen), mehrere Kopien, Directory-Anzeige, D64-Import und -Export; an der 1571 auch doppelseitige Disketten und D71-Dateien |
 | `MS-NIBCOPY` | 52 (BETA) | Nibble-Kopierer nach dem Vorbild der nibtools: Spuren bitgenau lesen und schreiben (Syncs, Lücken, Spur 36 bis 42, Halbspuren, Weak Bits), Ablage im Multi-Speeder-RAM oder in einer REU, G64-Import und -Export; an der 1571 mit Indexloch (gleiche Spurlage wie das Original), am C128 mit 2 MHz |
 | `MS-RS232` | 3 | RS-232-Treiber im RAM bei $9800 bis $9FFF, weil der Kernal keine RS-232-Routinen hat |
 | `MS-15SECCOPY` | 18 | Neue Fassung von 15 Seconds Copy von Mike Pall: kopiert normal formatierte Disketten als rohes GCR über das Parallelkabel |
