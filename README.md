@@ -127,9 +127,9 @@ RUN
 | `MS-STATUS` | 23 | Shows the drive error channel |
 | `MS-MEMTEST` | 27 | Tests the 512 KB SRAM (64 banks) with 4 patterns, 1 to 99 runs, result per bank |
 | `MS-FASTCOPY` | 39 | Disk copy through the 512 KB RAM or a REU (`TRANSFER: FAST` with its own fast drive code), 35/40/auto tracks, verify on/off, several copies, directory view, D64 file import and export |
-| `MS-NIBCOPY` | 50 (BETA) | Nibble copier after the model of nibtools: reads and writes tracks bit by bit (syncs, gaps, tracks 36 to 42, half tracks, weak bits), storage in the Multi-Speeder RAM or a REU, G64 import and export |
+| `MS-NIBCOPY` | 52 (BETA) | Nibble copier after the model of nibtools: reads and writes tracks bit by bit (syncs, gaps, tracks 36 to 42, half tracks, weak bits), storage in the Multi-Speeder RAM or a REU, G64 import and export; on the 1571 with index hole (same track position as the original), on the C128 at 2 MHz |
 | `MS-RS232` | 3 | RS-232 driver in RAM at $9800 to $9FFF, because the kernal has no RS-232 routines |
-| `MS-15SECCOPY` | 16 | New version of 15 Seconds Copy by Mike Pall: copies normally formatted disks as raw GCR over the parallel cable |
+| `MS-15SECCOPY` | 18 | New version of 15 Seconds Copy by Mike Pall: copies normally formatted disks as raw GCR over the parallel cable |
 
 `MS-MEMTEST` needs the Multi-Speeder. `MS-FASTCOPY` works without it if there is a REU of at least 256 KB and a parallel connection (PIA or VIA1), for example with DolphinDos26UL. The raw driver [`RS232DRV-9800.prg`](ms-tools/prg/RS232DRV-9800.prg) is included as well.
 
@@ -198,7 +198,7 @@ Full steps and troubleshooting are in the manuals.
 - `MS-MEMTEST` overwrites the RAM content.
 - Programs with their own fast loader or copy protection sometimes only run with the original kernal and original DOS.
 - DolphinDos26 uses illegal NMOS 6502 instructions like DolphinDOS, so it does not run on a WDC 65C02.
-- C1571DolphinDos26 always runs at 2 MHz like the original DolphinDOS 3. Enter `@X-` before loading programs with their own fast loader, or switch to the Commodore ROM with `@I:1@RNROM`. MS-NIBCOPY and MS-15SECCOPY are written for the 1541, not for the 1571.
+- C1571DolphinDos26 always runs at 2 MHz like the original DolphinDOS 3. Enter `@X-` before loading programs with their own fast loader, or switch to the Commodore ROM with `@I:1@RNROM`. MS-15SECCOPY sets a 1571 with DolphinDOS to 1 MHz itself for BACKUP and VERIFY; MS-NIBCOPY detects the 1571 and loads its own drive code (1 MHz for disk access, index hole).
 - The C128 kernal has no tape and no kernal RS-232 routines: OPEN to device 1 or 2 reports ILLEGAL DEVICE. Programs with their own RS-232 driver are not affected. `LOAD"name"` without a device number loads from the default device to the start of BASIC, as usual on the C128.
 
 ## What is in this repository?
@@ -353,9 +353,9 @@ RUN
 | `MS-STATUS` | 23 | Zeigt den Fehlerkanal des Laufwerks |
 | `MS-MEMTEST` | 27 | Prüft die 512 KB SRAM (64 Bänke) mit 4 Mustern, 1 bis 99 Läufe, Ergebnis je Bank |
 | `MS-FASTCOPY` | 39 | Diskettenkopie über das 512-KB-RAM oder eine REU (`TRANSFER: FAST` mit eigenem schnellen Laufwerkscode), 35/40/AUTO Spuren, Verify an/aus, mehrere Kopien, Directory-Anzeige, D64-Import und -Export |
-| `MS-NIBCOPY` | 50 (BETA) | Nibble-Kopierer nach dem Vorbild der nibtools: Spuren bitgenau lesen und schreiben (Syncs, Lücken, Spur 36 bis 42, Halbspuren, Weak Bits), Ablage im Multi-Speeder-RAM oder in einer REU, G64-Import und -Export |
+| `MS-NIBCOPY` | 52 (BETA) | Nibble-Kopierer nach dem Vorbild der nibtools: Spuren bitgenau lesen und schreiben (Syncs, Lücken, Spur 36 bis 42, Halbspuren, Weak Bits), Ablage im Multi-Speeder-RAM oder in einer REU, G64-Import und -Export; an der 1571 mit Indexloch (gleiche Spurlage wie das Original), am C128 mit 2 MHz |
 | `MS-RS232` | 3 | RS-232-Treiber im RAM bei $9800 bis $9FFF, weil der Kernal keine RS-232-Routinen hat |
-| `MS-15SECCOPY` | 16 | Neue Fassung von 15 Seconds Copy von Mike Pall: kopiert normal formatierte Disketten als rohes GCR über das Parallelkabel |
+| `MS-15SECCOPY` | 18 | Neue Fassung von 15 Seconds Copy von Mike Pall: kopiert normal formatierte Disketten als rohes GCR über das Parallelkabel |
 
 `MS-MEMTEST` braucht den Multi-Speeder. `MS-FASTCOPY` geht auch ohne ihn, wenn eine REU ab 256 KB und eine Parallelverbindung (PIA oder VIA1) vorhanden sind, zum Beispiel mit DolphinDos26UL. Der reine Treiber [`RS232DRV-9800.prg`](ms-tools/prg/RS232DRV-9800.prg) liegt ebenfalls bei.
 
@@ -417,7 +417,7 @@ Alle Schritte und die Fehlersuche stehen in den Handbüchern.
 - `MS-MEMTEST` überschreibt den RAM-Inhalt.
 - Programme mit eigenem Schnelllader oder Kopierschutz laufen mitunter nur mit Original-Kernal und Original-DOS.
 - DolphinDos26 verwendet wie DolphinDOS illegale NMOS-6502-Befehle und läuft daher nicht auf einer WDC 65C02.
-- C1571DolphinDos26 läuft wie das originale DolphinDOS 3 immer mit 2 MHz. Vor dem Laden von Programmen mit eigenem Schnelllader `@X-` eingeben oder mit `@I:1@RNROM` auf das Commodore-ROM umschalten. MS-NIBCOPY und MS-15SECCOPY sind für die 1541 geschrieben, nicht für die 1571.
+- C1571DolphinDos26 läuft wie das originale DolphinDOS 3 immer mit 2 MHz. Vor dem Laden von Programmen mit eigenem Schnelllader `@X-` eingeben oder mit `@I:1@RNROM` auf das Commodore-ROM umschalten. MS-15SECCOPY stellt eine 1571 mit DolphinDOS für BACKUP und VERIFY selbst auf 1 MHz; MS-NIBCOPY erkennt die 1571 und lädt einen eigenen Laufwerkscode (1 MHz für den Diskettenzugriff, Indexloch).
 - Der C128-Kernal hat keine Kassetten- und keine Kernal-RS-232-Routinen: OPEN auf Gerät 1 oder 2 meldet ILLEGAL DEVICE. Programme mit eigenem RS-232-Treiber sind nicht betroffen. `LOAD"name"` ohne Gerätenummer lädt vom Standardgerät an den BASIC-Anfang, wie beim C128 üblich.
 
 ## Was liegt in diesem Repository?

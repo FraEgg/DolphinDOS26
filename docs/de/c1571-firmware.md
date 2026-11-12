@@ -130,8 +130,13 @@ im C128- und im C64-Modus.
 
 Unterschiede zur 1541, die das Addon berücksichtigt: binärer Track-Cache
 (Sektorstatus $10 = geändert, $00 = gültig), Modusflag $6005 statt pota1
-(daher `ms_save_r` jetzt $60E9), im 1541-Modus fährt DD3-1571 den Kopf nicht
-hinter `dd_maxtrk-1` (Probe auf Spur 36 meldet deshalb selbst 21).
+(daher `ms_save_r` jetzt $60E9). Im 1541-Modus gilt für den Controller der
+DD3-1571 eine Spur ab `maxtrk` ($02AC, aus `dd_maxtrk`) als Spur der Rückseite:
+Bei 35 Spuren landete ein Suchjob auf Spur 36 auf Seite 1. `seek_id` setzt
+deshalb für die Probe hinter der Grenze kurz beide auf 41 und danach zurück;
+so erkennen CDR, die API-Probe (MS-FASTCOPY `TRACKS: AUTO`) und die
+CDW-Prüfung 40 Spuren auch, wenn das Laufwerk sie beim Initialisieren nicht
+erkannt hat.
 
 ## Leistung
 

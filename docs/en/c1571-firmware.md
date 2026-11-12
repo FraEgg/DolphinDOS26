@@ -131,8 +131,13 @@ C128 and in C64 mode.
 
 Differences from the 1541 that the addon takes into account: binary track
 cache (sector status $10 = changed, $00 = valid), mode flag $6005 instead of
-pota1 (hence `ms_save_r` is now $60E9), in 1541 mode DD3-1571 does not move the
-head beyond `dd_maxtrk-1` (a probe on track 36 therefore reports 21 itself).
+pota1 (hence `ms_save_r` is now $60E9). In 1541 mode the DD3-1571 controller treats
+a track from `maxtrk` ($02AC, taken from `dd_maxtrk`) onwards as a track of the
+back side: with 35 tracks a seek job for track 36 ended up on side 1. `seek_id`
+therefore briefly sets both to 41 for the probe beyond the limit and restores
+them afterwards; this way CDR, the API probe (MS-FASTCOPY `TRACKS: AUTO`) and
+the CDW check recognise 40 tracks even if the drive did not detect them on
+initialisation.
 
 ## Performance
 

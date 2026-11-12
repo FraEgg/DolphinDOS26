@@ -68,6 +68,8 @@ Routines: `ui_init`, `ui_exit`, `ui_puts` (text at `ui_row`/`ui_col` in
 | `tests/test_nibcopy.py` | MS-NIBCOPY: read/write via MS-RAM and REU, target bit-identical to source, TRACK INFO, presets (20 checks) |
 | `tests/test_rs232.py` | MS-RS232: LIST header, install, send/receive via VICE's RS-232 emulation (TCP test server), floppy access with an open RS-232 file, unhook, rehook (8 checks) |
 | `tests/test_import.py [name\|test] [reu]` | MS-NIBCOPY: IMPORT G64 FILE from drive 9, WRITE DISK, target = G64 file, for games start of the copy |
+| `tests/test_nibcopy_index.py [1571\|cr\|1541] [off]` | MS-NIBCOPY: copy with index hole (1571, 1571CR in the C128DCR), same position of every track relative to the hole; 1541: matching payload without index |
+| `tests/test_nibcopy_1571.py [1571\|cr]` | MS-NIBCOPY: commands of the 1571 payload (INDEX, READ/WRITE from the index) directly |
 | `tests/test_nibcopy_dir.py` | MS-NIBCOPY: DIRECTORY, END TRACK after import, tracks in MS-RAM survive the directory |
 | `tests/test_nibcopy_names.py [fill byte ...]` | MS-NIBCOPY: suggestion and input of drive and file name with pre-filled RAM |
 | `tests/test_led.py` | MS-NIBCOPY: red LED on during reading, off afterwards |
@@ -247,12 +249,26 @@ On real hardware (C64U with a 1541, Multi-Speeder V3 with DolphinDos26DD2 on VIA
 writes normal disks with MS-RAM and REU (35 tracks, verify on, files byte-identical afterwards).
 
 Minimum hardware requirements: C64 or C128 in C64 mode; 1541 with Switchless Multi-Speeder V3
-and DolphinDos26 or DolphinDos26DD2, or DolphinDos26UL (C64U or DolphinDOS 2 hardware); active
+and DolphinDos26 or DolphinDos26DD2, 1571/1571CR (C128DCR) with Multi-Speeder and DolphinDos26 for the
+1571, or DolphinDos26UL (C64U or DolphinDOS 2 hardware); active
 parallel cable (PIA or VIA1); MS-RAM storage (Multi-Speeder only) or an REU large enough for the
 end track (512 KB for 35-40 tracks, 1 MB or more for track 42 with half tracks). One of the two
 storage options is required; with DolphinDos26UL only the REU, without it the tool shows
 `NEED REU` and blocks reading and writing.
 MS-NIBCOPY has not been tested with DolphinDOS 2.
+
+**1571 and C128:** When connecting, the tool selects the drive payload by the power-on text in the
+drive ROM (`…1571` at `$E5C4`): on the 1541 as before (PIA or VIA1 cable), on the 1571 the 1571
+version (`src/drv-nib.s` with `-D D1571`: PIA only, side 0, 1 MHz for everything with byte ready,
+2 MHz for the transfer). After the start both payloads are held in the RAM under the I/O area
+(`$D000`). With the 1571 the tool uses the **index hole** (EDIT PRESET: `INDEX HOLE AUTO/OFF`,
+byte 7 of the preset, 0 = AUTO): the payload detects it by the bit at `$2000` that changes with the
+hole (WD1770 bit 1 on the 1571, MOS 5710 bit 6 on the 1571CR; `$D0` to the WD1770 only if nothing
+changes without it), reads every track from the hole and writes it with a lead-in after the hole so
+that it has the same position relative to the hole as on the original; the seam stays in a gap.
+On the **C128** (in C64 mode, detected by `$D030`) the tool computes and transfers at 2 MHz;
+during READ/WRITE the VIC screen is dark and shown briefly for each track. Measured (emulator,
+tracks 1–35 with index hole): C128DCR read 115 s / write 134 s, C64 with 1571 138 s / 174 s.
 
 Nibble copier modeled on nibtools
 (github.com/rittwage/nibtools), ported to the C64. A payload
