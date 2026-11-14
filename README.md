@@ -28,7 +28,7 @@ git remote set-url origin https://github.com/FraEgg/DolphinDOS.git
 
 Development of DolphinDOS now continues at:
 
-### 👉 [https://github.com/FraEgg/DolphinDOS](https://github.com/FragEg/DolphinDOS)
+### 👉 [https://github.com/FraEgg/DolphinDOS](https://github.com/FraEgg/DolphinDOS)
 
 This repository is no longer maintained. Please note:
 
