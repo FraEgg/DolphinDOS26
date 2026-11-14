@@ -6,7 +6,7 @@
 
 Die Entwicklung von DolphinDOS wird ab sofort unter folgender Adresse fortgeführt:
 
-### 👉 [https://github.com/FragEgg/DolphinDOS](https://github.com/FragEgg/DolphinDOS)
+### 👉 [https://github.com/FraEgg/DolphinDOS](https://github.com/FraEgg/DolphinDOS)
 
 Dieses Repository wird nicht mehr gepflegt. Bitte beachte:
 
@@ -17,7 +17,7 @@ Dieses Repository wird nicht mehr gepflegt. Bitte beachte:
 Git-Remote einer vorhandenen lokalen Kopie umstellen:
 
 ```bash
-git remote set-url origin https://github.com/FragEgg/DolphinDOS.git
+git remote set-url origin https://github.com/FraEgg/DolphinDOS.git
 ```
 
 ---
@@ -28,7 +28,7 @@ git remote set-url origin https://github.com/FragEgg/DolphinDOS.git
 
 Development of DolphinDOS now continues at:
 
-### 👉 [https://github.com/FragEgg/DolphinDOS](https://github.com/FragEgg/DolphinDOS)
+### 👉 [https://github.com/FraEgg/DolphinDOS](https://github.com/FragEg/DolphinDOS)
 
 This repository is no longer maintained. Please note:
 
@@ -39,5 +39,5 @@ This repository is no longer maintained. Please note:
 To point an existing local clone to the new location:
 
 ```bash
-git remote set-url origin https://github.com/FragEgg/DolphinDOS.git
+git remote set-url origin https://github.com/FraEgg/DolphinDOS.git
 ```
